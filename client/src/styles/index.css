@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --organic-bg: #f8f4ea;
+  --organic-surface: #ffffff;
+  --organic-text: #1f2a1f;
+  --organic-muted: #6f786d;
+  --organic-green: #2e6b33;
+  --organic-green-dark: #1a3f1f;
+  --organic-mustard: #b9862f;
+  --organic-border: #dde3d8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--organic-bg);
+  color: var(--organic-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.01em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-brand-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-brand-800;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-brand-700 px-6 py-3 text-sm font-bold text-brand-700 transition hover:bg-brand-50;
+  }
+
+  .organic-card {
+    @apply rounded-3xl border border-[#dde3d8] bg-white shadow-soft;
+  }
+
+  .section-shell {
+    @apply mx-auto max-w-7xl px-4 lg:px-6;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
