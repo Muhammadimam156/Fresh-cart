@@ -1,21 +1,3 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import { healthRouter } from './routes/healthRoutes.js';
-import { authRouter } from './routes/authRoutes.js';
-import { categoryRouter } from './routes/categoryRoutes.js';
-import { productRouter } from './routes/productRoutes.js';
-import { orderRouter } from './routes/orderRoutes.js';
-import { contactRouter } from './routes/contactRoutes.js';
-import { settingsRouter } from './routes/settingsRoutes.js';
-import { adminRouter } from './routes/adminRoutes.js';
-import { uploadRouter } from './routes/uploadRoutes.js';
-import { couponRouter } from './routes/couponRoutes.js';
-import { errorHandler, notFound } from './middleware/errorMiddleware.js';
-import { runSeed } from './controllers/seedController.js';
-import { connectDB } from './config/db.js';
-
 export function createApp() {
   const app = express();
   const configuredOrigins = (process.env.CLIENT_URL || 'http://localhost:5173,http://localhost:5174')
@@ -25,7 +7,6 @@ export function createApp() {
 
   app.use(helmet());
 
-  // In development allow any origin (helps local ports like 5173/5174)
   if (process.env.NODE_ENV !== 'production') {
     app.use(cors({ origin: true, credentials: true }));
   } else {
@@ -45,6 +26,20 @@ export function createApp() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(morgan('dev'));
+
+  // 👇 DB-connect middleware yahan add karein, routes se PEHLE
+  let dbReady = false;
+  app.use(async (req, res, next) => {
+    if (!dbReady && process.env.MONGO_URI) {
+      try {
+        await connectDB();
+        dbReady = true;
+      } catch (err) {
+        console.error('DB connection failed:', err);
+      }
+    }
+    next();
+  });
 
   app.get('/', (_, res) => {
     res.json({ message: 'Grocery API is running' });
@@ -71,18 +66,5 @@ export function createApp() {
 }
 
 const app = createApp();
-
-let dbReady = false;
-app.use(async (req, res, next) => {
-  if (!dbReady && process.env.MONGO_URI) {
-    try {
-      await connectDB();
-      dbReady = true;
-    } catch (err) {
-      console.error('DB connection failed:', err);
-    }
-  }
-  next();
-});
 
 export default app;
