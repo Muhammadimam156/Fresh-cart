@@ -14,6 +14,7 @@ import { uploadRouter } from './routes/uploadRoutes.js';
 import { couponRouter } from './routes/couponRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import { runSeed } from './controllers/seedController.js';
+import { connectDB } from './config/db.js';
 
 export function createApp() {
   const app = express();
@@ -68,3 +69,20 @@ export function createApp() {
 
   return app;
 }
+
+const app = createApp();
+
+let dbReady = false;
+app.use(async (req, res, next) => {
+  if (!dbReady && process.env.MONGO_URI) {
+    try {
+      await connectDB();
+      dbReady = true;
+    } catch (err) {
+      console.error('DB connection failed:', err);
+    }
+  }
+  next();
+});
+
+export default app;
