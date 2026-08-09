@@ -1,24 +1,20 @@
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({
   path: path.resolve(__dirname, '../.env')
 });
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 import { connectDB } from './config/db.js';
-import { createApp } from './app.js';
-
-
-
+import app from './app.js';   // 👈 ab default import hai, { createApp } nahi
 
 console.log('CLOUDINARY TEST:', {
   cloud: !!process.env.CLOUDINARY_CLOUD_NAME,
   key: !!process.env.CLOUDINARY_API_KEY,
   secret: !!process.env.CLOUDINARY_API_SECRET,
 });
-
-const app = createApp();
 
 const port = process.env.PORT || 5000;
 
