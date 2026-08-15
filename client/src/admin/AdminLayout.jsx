@@ -5,9 +5,6 @@ const menuItems = [
   { label: 'Categories', to: '/admin/categories' },
   { label: 'Products', to: '/admin/products' },
   { label: 'Orders', to: '/admin/orders' },
-  { label: 'Customers', to: '/admin/customers' },
-  { label: 'Messages', to: '/admin/messages' },
-  { label: 'Settings', to: '/admin/settings' },
 ];
 
 export function AdminLayout() {

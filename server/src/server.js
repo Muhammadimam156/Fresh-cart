@@ -1,3 +1,9 @@
+
+import dns from 'node:dns';
+
+dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';

@@ -46,9 +46,9 @@ export function SiteFooter() {
         <div className="text-sm text-brand-100/85">
           <h2 className="text-base font-bold text-white">Contact Us</h2>
           <div className="mt-4 grid gap-2">
-            <span>WhatsApp: 0323-0000000</span>
-            <span>Phone: +92 300 0000000</span>
-            <span>Email: support@freshkart.pk</span>
+            <span>WhatsApp: 0312889186</span>
+            <span>Phone: 0312889186</span>
+            <span>Email: ikorganicfoods09@gmail.com</span>
             <span>Address: Karachi, Pakistan</span>
           </div>
           <form className="mt-4 flex gap-2">

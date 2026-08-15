@@ -104,7 +104,7 @@ export function SiteHeader() {
             Cart ({cartCount})
           </Link>
           <a
-            href={`https://wa.me/${whatsAppNumber}`}
+            href={`https://wa.me/0312889186`}
             target="_blank"
             rel="noreferrer"
             className="hidden rounded-full bg-brand-800 px-4 py-2 text-xs font-bold text-white lg:inline-flex"

@@ -29,7 +29,7 @@ export function WhatsAppButton() {
 
   return (
     <a
-      href={`https://wa.me/${phone}`}
+      href={`https://wa.me/0312889186`}
       target="_blank"
       rel="noreferrer"
       aria-label="Order on WhatsApp"

@@ -23,7 +23,7 @@ export function AboutPage() {
           </div>
           <div className="organic-card overflow-hidden p-3">
             <img
-              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80"
+              src="https://unsplash.com/photos/clear-glass-jar-with-brown-liquid-Asj5DFw8UAw"
               alt="Organic grocery collection"
               className="h-full min-h-[340px] w-full rounded-3xl object-cover"
               loading="lazy"

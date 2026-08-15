@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+
 import { useDispatch } from 'react-redux';
 import { addItem } from '../features/cart/cartSlice';
 
-import { getProductBySlug, getProducts } from '../api/client';
+import {
+  getProductBySlug,
+  getProducts,
+} from '../api/client';
 
 import { ProductCard } from '../components/ProductCard';
 import { Breadcrumbs } from '../components/Breadcrumbs';
@@ -11,12 +19,24 @@ import { RatingStars } from '../components/RatingStars';
 
 export function ProductPage() {
   const { slug } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const navigate =
+    useNavigate();
+
+  const dispatch =
+    useDispatch();
+
+  const [product, setProduct] =
+    useState(null);
+
+  const [relatedProducts, setRelated] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [selectedVariant, setSelectedVariant] =
+    useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -25,7 +45,8 @@ export function ProductPage() {
       try {
         setLoading(true);
 
-        const apiProduct = await getProductBySlug(slug);
+        const apiProduct =
+          await getProductBySlug(slug);
 
         if (!mounted) return;
 
@@ -37,32 +58,63 @@ export function ProductPage() {
 
         setProduct(apiProduct);
 
-        // Get category slug
+        /*
+         * Select first variant by default
+         */
+
+        if (
+          Array.isArray(
+            apiProduct.variants
+          ) &&
+          apiProduct.variants.length > 0
+        ) {
+          setSelectedVariant(
+            apiProduct.variants[0]
+          );
+        } else {
+          setSelectedVariant(null);
+        }
+
         const categorySlug =
-          typeof apiProduct.category === 'string'
+          typeof apiProduct.category ===
+          'string'
             ? apiProduct.category
             : apiProduct.category?.slug;
 
         if (categorySlug) {
-          const products = await getProducts({
-            category: categorySlug,
-          });
+          const products =
+            await getProducts({
+              category:
+                categorySlug,
+            });
 
           if (mounted) {
-            const related = (products || [])
-              .filter((item) => {
-                const itemId = item._id || item.id;
-                const currentId = apiProduct._id || apiProduct.id;
+            const related =
+              (products || [])
+                .filter((item) => {
+                  const itemId =
+                    item._id ||
+                    item.id;
 
-                return itemId !== currentId;
-              })
-              .slice(0, 4);
+                  const currentId =
+                    apiProduct._id ||
+                    apiProduct.id;
+
+                  return (
+                    itemId !==
+                    currentId
+                  );
+                })
+                .slice(0, 4);
 
             setRelated(related);
           }
         }
       } catch (error) {
-        console.error('Failed to load product:', error);
+        console.error(
+          'Failed to load product:',
+          error
+        );
 
         if (mounted) {
           setProduct(null);
@@ -82,7 +134,6 @@ export function ProductPage() {
     };
   }, [slug]);
 
-  // Loading state
   if (loading) {
     return (
       <div className="py-20 text-center">
@@ -93,7 +144,6 @@ export function ProductPage() {
     );
   }
 
-  // Product not found
   if (!product) {
     return (
       <div className="py-20 text-center">
@@ -112,43 +162,133 @@ export function ProductPage() {
   }
 
   const categoryName =
-    typeof product.category === 'string'
+    typeof product.category ===
+    'string'
       ? product.category
-      : product.category?.name || 'Category';
+      : product.category?.name ||
+        'Category';
 
   const categorySlug =
-    typeof product.category === 'string'
+    typeof product.category ===
+    'string'
       ? product.category
       : product.category?.slug;
 
   const productImage =
-    product.image ||
     product.images?.[0] ||
+    product.image ||
     '';
+
+  /*
+   * Selected price
+   */
+
+  const currentPrice =
+    selectedVariant
+      ? selectedVariant.price
+      : product.price;
+
+  /*
+   * Selected stock
+   */
+
+  const currentStock =
+    selectedVariant
+      ? selectedVariant.stock
+      : product.stock;
+
+  /*
+   * Add selected product/variant
+   */
+
+  function handleAddToCart() {
+    if (currentStock <= 0) {
+      return;
+    }
+
+    dispatch(
+      addItem({
+        ...product,
+
+        id:
+          product._id ||
+          product.id,
+
+        variantId:
+          selectedVariant?.id ||
+          null,
+
+        variantLabel:
+          selectedVariant?.label ||
+          '',
+
+        variantWeight:
+          selectedVariant?.weight ??
+          null,
+
+        variantUnit:
+          selectedVariant?.unit ||
+          '',
+
+        price: Number(
+          currentPrice
+        ),
+
+        stock: Number(
+          currentStock
+        ),
+
+        quantity: 1,
+      })
+    );
+  }
+
+  function handleBuyNow() {
+    if (currentStock <= 0) {
+      return;
+    }
+
+    handleAddToCart();
+
+    navigate('/checkout');
+  }
 
   return (
     <div>
       <Breadcrumbs
         items={[
-          { label: 'Home', to: '/' },
-          { label: 'Shop', to: '/shop' },
+          {
+            label: 'Home',
+            to: '/',
+          },
+
+          {
+            label: 'Shop',
+            to: '/shop',
+          },
+
           {
             label: categoryName,
-            to: categorySlug ? `/category/${categorySlug}` : '/shop',
+            to: categorySlug
+              ? `/category/${categorySlug}`
+              : '/shop',
           },
-          { label: product.name },
+
+          {
+            label: product.name,
+          },
         ]}
       />
 
-      {/* Product Details */}
       <div className="mt-8 grid gap-10 lg:grid-cols-2">
-        {/* Product Image */}
+        {/* IMAGE */}
+
         <div className="organic-card overflow-hidden">
           {productImage ? (
             <img
               src={productImage}
               alt={product.name}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain p-6"
             />
           ) : (
             <div className="flex min-h-[400px] items-center justify-center bg-[#f5f5ef]">
@@ -157,7 +297,8 @@ export function ProductPage() {
           )}
         </div>
 
-        {/* Product Information */}
+        {/* DETAILS */}
+
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#b9862f]">
             Product Details
@@ -171,19 +312,103 @@ export function ProductPage() {
             <RatingStars />
           </div>
 
+          {/* PRICE */}
+
           <p className="mt-5 text-3xl font-bold text-brand-900">
-            Rs. {product.price}
+            Rs. {currentPrice}
           </p>
+
+          {/* DESCRIPTION */}
 
           <p className="mt-5 leading-7 text-[#637260]">
             {product.description}
           </p>
 
-          <div className="mt-5">
+          {/* VARIANTS */}
+
+          {product.variants?.length > 0 && (
+            <div className="mt-7">
+              <div className="mb-3 flex items-center justify-between">
+                <p className="font-bold text-brand-900">
+                  Select Weight
+                </p>
+
+                {selectedVariant && (
+                  <span className="text-sm font-semibold text-brand-700">
+                    {selectedVariant.label ||
+                      `${selectedVariant.weight} ${selectedVariant.unit}`}
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {product.variants.map(
+                  (variant) => {
+                    const selected =
+                      selectedVariant?.id ===
+                      variant.id;
+
+                    const outOfStock =
+                      Number(
+                        variant.stock
+                      ) <= 0;
+
+                    return (
+                      <button
+                        key={variant.id}
+                        type="button"
+                        disabled={
+                          outOfStock
+                        }
+                        onClick={() =>
+                          setSelectedVariant(
+                            variant
+                          )
+                        }
+                        className={`rounded-2xl border px-4 py-4 text-left transition-all ${
+                          selected
+                            ? 'border-brand-700 bg-brand-50 ring-2 ring-brand-200'
+                            : 'border-slate-200 bg-white hover:border-brand-500'
+                        } ${
+                          outOfStock
+                            ? 'cursor-not-allowed opacity-50'
+                            : ''
+                        }`}
+                      >
+                        <div className="font-bold text-brand-900">
+                          {variant.label ||
+                            `${variant.weight} ${variant.unit}`}
+                        </div>
+
+                        <div className="mt-1 text-sm font-bold text-brand-700">
+                          Rs.{' '}
+                          {
+                            variant.price
+                          }
+                        </div>
+
+                        <div className="mt-1 text-xs text-slate-500">
+                          {outOfStock
+                            ? 'Out of stock'
+                            : `${variant.stock} available`}
+                        </div>
+                      </button>
+                    );
+                  }
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* STOCK */}
+
+          <div className="mt-6">
             <p className="font-semibold text-brand-900">
               Stock status:{' '}
               <span className="font-normal">
-                {product.stock > 0 ? 'In stock' : 'Out of stock'}
+                {currentStock > 0
+                  ? `${currentStock} available`
+                  : 'Out of stock'}
               </span>
             </p>
 
@@ -195,18 +420,16 @@ export function ProductPage() {
             </p>
           </div>
 
-          {/* Actions */}
+          {/* ACTIONS */}
+
           <div className="mt-8 flex flex-wrap gap-3">
             <button
               type="button"
-              disabled={product.stock <= 0}
-              onClick={() =>
-                dispatch(
-                  addItem({
-                    ...product,
-                    quantity: 1,
-                  })
-                )
+              disabled={
+                currentStock <= 0
+              }
+              onClick={
+                handleAddToCart
               }
               className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -215,27 +438,30 @@ export function ProductPage() {
 
             <button
               type="button"
-              disabled={product.stock <= 0}
-              onClick={() => {
-                dispatch(
-                  addItem({
-                    ...product,
-                    quantity: 1,
-                  })
-                );
-
-                navigate('/checkout');
-              }}
+              disabled={
+                currentStock <= 0
+              }
+              onClick={
+                handleBuyNow
+              }
               className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
             >
               Buy Now
             </button>
           </div>
 
-          {/* WhatsApp */}
+          {/* WHATSAPP */}
+
           <a
-            href={`https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(
-              `Assalamualaikum, I want to order ${product.name}. Price: Rs. ${product.price}`
+            href={`https://wa.me/0312889186?text=${encodeURIComponent(
+              `Assalamualaikum, I want to order ${product.name}${
+                selectedVariant
+                  ? ` - ${
+                      selectedVariant.label ||
+                      `${selectedVariant.weight} ${selectedVariant.unit}`
+                    }`
+                  : ''
+              }. Price: Rs. ${currentPrice}`
             )}`}
             target="_blank"
             rel="noreferrer"
@@ -246,8 +472,10 @@ export function ProductPage() {
         </div>
       </div>
 
-      {/* Related Products */}
-      {relatedProducts.length > 0 && (
+      {/* RELATED */}
+
+      {relatedProducts.length >
+        0 && (
         <div className="mt-12">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -271,12 +499,18 @@ export function ProductPage() {
           </div>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {relatedProducts.map((item) => (
-              <ProductCard
-                key={item._id || item.id || item.slug}
-                product={item}
-              />
-            ))}
+            {relatedProducts.map(
+              (item) => (
+                <ProductCard
+                  key={
+                    item._id ||
+                    item.id ||
+                    item.slug
+                  }
+                  product={item}
+                />
+              )
+            )}
           </div>
         </div>
       )}
