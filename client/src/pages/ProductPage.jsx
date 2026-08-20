@@ -224,7 +224,7 @@ export function ProductPage() {
           product.id,
 
         variantId:
-          selectedVariant?.id ||
+          selectedVariant?._id ||
           null,
 
         variantLabel:
@@ -397,8 +397,8 @@ export function ProductPage() {
                 {product.variants.map(
                   (variant) => {
                     const selected =
-                      selectedVariant?.id ===
-                      variant.id;
+                      selectedVariant?._id ===
+                      variant._id;
 
                     const outOfStock =
                       Number(
@@ -407,7 +407,7 @@ export function ProductPage() {
 
                     return (
                       <button
-                        key={variant.id}
+                        key={variant._id}
                         type="button"
                         disabled={
                           outOfStock

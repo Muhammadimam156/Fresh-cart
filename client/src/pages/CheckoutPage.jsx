@@ -47,7 +47,11 @@ export function CheckoutPage() {
           notes: form.notes,
         },
         customerUser: authUser?._id,
-        items: items.map((item) => ({ productId: item.id, quantity: item.quantity })),
+        items: items.map((item) => ({
+          productId: item.id,
+          variantId: item.variantId || null,
+          quantity: item.quantity,
+        })),
         couponCode: couponInfo?.coupon?.code,
       });
 
