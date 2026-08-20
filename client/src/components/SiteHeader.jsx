@@ -7,7 +7,6 @@ import { getSettings } from '../api/client';
 const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Shop', to: '/shop' },
-
   { label: 'About Us', to: '/about' },
   { label: 'Contact', to: '/contact' },
 ];
@@ -46,7 +45,7 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center gap-3 font-bold text-brand-900">
           <span className="grid h-10 w-10 place-items-center rounded-full border border-[#d8d2c4] bg-organic-cream text-sm">Z</span>
           <span>
-            <span className="block text-lg leading-5">Zaiq a Organics</span>
+            <span className="block text-lg leading-5">Zaiqa Organics</span>
             <span className="block text-[11px] font-semibold text-[#7b7f72]">Pure Taste • Healthy Life</span>
           </span>
         </Link>
