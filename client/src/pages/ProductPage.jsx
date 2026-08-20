@@ -38,6 +38,13 @@ export function ProductPage() {
   const [selectedVariant, setSelectedVariant] =
     useState(null);
 
+  // Add-to-cart animation states
+  const [adding, setAdding] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  // Toast alert state
+  const [toastVisible, setToastVisible] = useState(false);
+
   useEffect(() => {
     let mounted = true;
 
@@ -202,9 +209,11 @@ export function ProductPage() {
    */
 
   function handleAddToCart() {
-    if (currentStock <= 0) {
+    if (currentStock <= 0 || adding) {
       return;
     }
+
+    setAdding(true);
 
     dispatch(
       addItem({
@@ -241,6 +250,22 @@ export function ProductPage() {
         quantity: 1,
       })
     );
+
+    // Show toast alert
+    setToastVisible(true);
+
+    setTimeout(() => {
+      setAdding(false);
+      setAdded(true);
+
+      setTimeout(() => {
+        setAdded(false);
+      }, 1500);
+    }, 500);
+
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 2000);
   }
 
   function handleBuyNow() {
@@ -255,6 +280,33 @@ export function ProductPage() {
 
   return (
     <div>
+      {/* TOAST ALERT */}
+      <div
+        className={`fixed right-5 top-5 z-50 flex items-center gap-3 rounded-2xl bg-green-700 px-5 py-4 text-white shadow-xl transition-all duration-300 ${
+          toastVisible
+            ? 'translate-y-0 opacity-100'
+            : 'pointer-events-none -translate-y-4 opacity-0'
+        }`}
+      >
+        <svg
+          className="h-5 w-5 flex-shrink-0"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <path
+            d="m4 10 4 4 8-8"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+
+        <span className="text-sm font-semibold">
+          {product.name} added to cart!
+        </span>
+      </div>
+
       <Breadcrumbs
         items={[
           {
@@ -426,14 +478,42 @@ export function ProductPage() {
             <button
               type="button"
               disabled={
-                currentStock <= 0
+                currentStock <= 0 || adding
               }
               onClick={
                 handleAddToCart
               }
-              className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+              className={`relative flex min-w-[160px] items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 ${
+                added
+                  ? 'bg-green-700 shadow-lg shadow-green-900/20'
+                  : 'bg-brand-700 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg'
+              }`}
             >
-              Add to Cart
+              {adding ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Adding
+                </>
+              ) : added ? (
+                <>
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="m4 10 4 4 8-8"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Added
+                </>
+              ) : (
+                'Add to Cart'
+              )}
             </button>
 
             <button

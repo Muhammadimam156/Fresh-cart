@@ -132,7 +132,7 @@ export function HomePage() {
 
             <div className="mb-5 inline-flex animate-[fadeInUp_.6s_ease-out] items-center gap-2 rounded-full border border-[#d8c99e] bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#8b6828]">
               <span className="h-2 w-2 rounded-full bg-[#b9862f]" />
-              Authentic Desi Products
+              100% Organic Desi Food Products in Pakistan
             </div>
 
             <h1 className="max-w-2xl animate-[fadeInUp_.8s_ease-out] text-6xl font-semibold leading-[0.95] text-[#243522] sm:text-7xl lg:text-8xl">
@@ -143,9 +143,9 @@ export function HomePage() {
             </h1>
 
             <p className="mt-7 max-w-xl animate-[fadeInUp_1s_ease-out] text-lg leading-8 text-[#687064]">
-              Discover authentic Pakistani food products made with quality,
-              tradition and care. From pure honey and flour to rice, spices
-              and other desi favorites.
+              Shop authentic, organic desi food products online — pure honey,
+              fresh flour, premium rice, and traditional Pakistani spices,
+              delivered fresh to your doorstep across Pakistan.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -153,7 +153,7 @@ export function HomePage() {
                 to="/shop"
                 className="group inline-flex items-center gap-2 rounded-full bg-[#285c30] px-7 py-4 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1d4824] hover:shadow-xl active:scale-95"
               >
-                Explore Products
+                Shop Now
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
                   →
                 </span>
@@ -174,21 +174,21 @@ export function HomePage() {
                 <strong className="block text-xl text-[#29412c]">
                   100%
                 </strong>
-                Authentic
+                Organic &amp; Authentic
               </div>
 
               <div>
                 <strong className="block text-xl text-[#29412c]">
                   Fresh
                 </strong>
-                Products
+                Quality Products
               </div>
 
               <div>
                 <strong className="block text-xl text-[#29412c]">
                   Fast
                 </strong>
-                Delivery
+                Nationwide Delivery
               </div>
             </div>
           </div>
@@ -201,7 +201,7 @@ export function HomePage() {
             <div className="relative overflow-hidden rounded-[3rem] border-[10px] border-white shadow-2xl">
               <img
                 src="https://images.pexels.com/photos/8820432/pexels-photo-8820432.jpeg"
-                alt="Traditional desi food"
+                alt="Authentic organic desi food products from Pakistan"
                 className="h-[520px] w-full object-cover transition-transform duration-700 hover:scale-105"
               />
 
@@ -211,7 +211,7 @@ export function HomePage() {
                 </p>
 
                 <p className="mt-1 font-semibold text-[#273727]">
-                  Bringing authentic desi taste to your home.
+                  Bringing authentic, chemical-free desi taste to your home.
                 </p>
               </div>
             </div>
@@ -227,15 +227,15 @@ export function HomePage() {
         <div className="flex items-end justify-between gap-5">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#b9862f]">
-              Explore
+              Shop by Category
             </p>
 
             <h2 className="mt-2 text-5xl font-semibold text-[#253625]">
-              Desi Categories
+              Explore Our Desi Food Categories
             </h2>
 
             <p className="mt-3 max-w-xl text-[#70796e]">
-              Everything you need for an authentic desi kitchen.
+              Everything you need for an authentic, organic desi kitchen — handpicked and quality-checked.
             </p>
           </div>
 
@@ -243,7 +243,7 @@ export function HomePage() {
             to="/shop"
             className="hidden rounded-full border border-[#d5dccf] px-5 py-3 text-sm font-bold text-[#315534] transition-all duration-300 hover:-translate-y-1 hover:bg-[#f1f4eb] sm:inline-flex"
           >
-            View All →
+            View All Categories →
           </Link>
         </div>
 
@@ -258,12 +258,12 @@ export function HomePage() {
               <Link
                 key={category._id || category.id || category.name}
                 to={`/category/${slug}`}
-                className="group relative overflow-hidden rounded-[2rem] bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
+                className="group flex flex-col overflow-hidden rounded-[2rem] bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
                 style={{
                   animation: `fadeInUp .6s ease-out ${index * 100}ms both`,
                 }}
               >
-                <div className="aspect-[4/5] overflow-hidden">
+                <div className="aspect-square w-full overflow-hidden bg-[#f3f1e8]">
                   <img
                     src={getImage(category)}
                     alt={category.name}
@@ -274,12 +274,12 @@ export function HomePage() {
                   />
                 </div>
 
-                <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-white/95 p-4 backdrop-blur">
+                <div className="flex flex-1 flex-col p-4">
                   <h3 className="font-semibold text-[#263827]">
                     {category.name}
                   </h3>
 
-                  <p className="mt-1 text-xs text-[#737c70]">
+                  <p className="mt-1 line-clamp-2 text-xs text-[#737c70]">
                     {category.description || 'Explore products'}
                   </p>
 
@@ -306,11 +306,11 @@ export function HomePage() {
               </p>
 
               <h2 className="mt-2 text-5xl font-semibold text-[#253625]">
-                Latest Products
+                Fresh Additions to Our Store
               </h2>
 
               <p className="mt-3 text-[#70796e]">
-                Discover the newest additions to our collection.
+                Be the first to try our newest organic and desi products.
               </p>
             </div>
 
@@ -318,7 +318,7 @@ export function HomePage() {
               to="/shop"
               className="hidden rounded-full bg-[#285c30] px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#1d4824] sm:inline-flex"
             >
-              Shop All →
+              Shop All Products →
             </Link>
           </div>
 
@@ -352,11 +352,11 @@ export function HomePage() {
           </p>
 
           <h2 className="mt-2 text-5xl font-semibold text-[#253625]">
-            Best Sellers
+            Our Best Selling Desi Products
           </h2>
 
           <p className="mx-auto mt-3 max-w-xl text-[#70796e]">
-            Products our customers keep coming back for.
+            Trusted by hundreds of customers across Pakistan — the products people keep reordering.
           </p>
         </div>
 
@@ -390,7 +390,7 @@ export function HomePage() {
             </p>
 
             <h2 className="mt-2 text-5xl font-semibold">
-              Taste You Can Trust
+              Pakistan's Trusted Organic Food Store
             </h2>
           </div>
 
@@ -398,26 +398,26 @@ export function HomePage() {
 
             <Feature
               icon="🌿"
-              title="Authentic Products"
-              text="Carefully selected products with traditional desi taste."
+              title="100% Organic & Authentic"
+              text="Carefully sourced, chemical-free products with genuine traditional desi taste."
             />
 
             <Feature
               icon="✨"
-              title="Premium Quality"
-              text="We focus on quality from selection to packaging."
+              title="Premium Quality Assured"
+              text="Every product is quality-checked from selection to final packaging."
             />
 
             <Feature
               icon="📦"
-              title="Freshly Packed"
-              text="Products are packed carefully to preserve freshness."
+              title="Freshly Packed for You"
+              text="Hygienically packed to lock in freshness and flavor until it reaches your door."
             />
 
             <Feature
               icon="💬"
-              title="Easy Ordering"
-              text="Order easily through our website or WhatsApp."
+              title="Easy Online Ordering"
+              text="Order in minutes through our website or WhatsApp — quick and hassle-free."
             />
 
           </div>
@@ -439,12 +439,12 @@ export function HomePage() {
             </p>
 
             <h2 className="mt-3 text-5xl font-semibold text-[#293a28]">
-              Want to Order Directly?
+              Order Fresh Desi Products in Minutes
             </h2>
 
             <p className="mx-auto mt-4 max-w-xl text-[#6c7568]">
-              Contact us on WhatsApp and our team will help you place your
-              order quickly and easily.
+              Message us on WhatsApp and our team will help you place your
+              order quickly, with fast delivery anywhere in Pakistan.
             </p>
 
             <a
@@ -525,11 +525,11 @@ function EmptyProducts() {
       <div className="text-4xl">🌾</div>
 
       <h3 className="mt-3 text-2xl font-semibold text-[#293a28]">
-        Products Coming Soon
+        New Products Coming Soon
       </h3>
 
       <p className="mt-2 text-sm text-[#737c70]">
-        We are preparing our delicious desi products for you.
+        We are preparing our delicious, organic desi products for you.
       </p>
 
       <Link

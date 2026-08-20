@@ -21,6 +21,7 @@ import { AdminCategories } from './admin/CategoriesPage';
 import { AdminProducts } from './admin/ProductsPage';
 import { AdminOrders } from './admin/OrdersPage';
 import { MyOrdersPage } from './pages/MyOrdersPage';
+import { ScrollToTop } from './components/ScrollToTop';
 
 const simpleRoutes = [
   ['/forgot-password', 'Forgot Password'],
@@ -33,46 +34,50 @@ const simpleRoutes = [
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<SiteLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="category/:slug" element={<CategoryPage />} />
-        <Route path="product/:slug" element={<ProductPage />} />
-        <Route path="shop" element={<ShopPage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="cart" element={<CartPage />} />
-        <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="contact" element={<ContactPage />} />
-        <Route path="order-success" element={<SuccessPage />} />
-        {simpleRoutes.map(([path, title]) => (
-          <Route key={path} path={path} element={<GenericPage title={title} />} />
-        ))}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/account/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/account/orders"
-          element={
-            <ProtectedRoute>
-              <MyOrdersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-      <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="categories" element={<AdminCategories />} />
-        <Route path="products" element={<AdminProducts />} />
-        <Route path="orders" element={<AdminOrders />} />
-      </Route>
-    </Routes>
+    <>
+      <ScrollToTop />
+
+      <Routes>
+        <Route element={<SiteLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="category/:slug" element={<CategoryPage />} />
+          <Route path="product/:slug" element={<ProductPage />} />
+          <Route path="shop" element={<ShopPage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="order-success" element={<SuccessPage />} />
+          {simpleRoutes.map(([path, title]) => (
+            <Route key={path} path={path} element={<GenericPage title={title} />} />
+          ))}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/account/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/orders"
+            element={
+              <ProtectedRoute>
+                <MyOrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="orders" element={<AdminOrders />} />
+        </Route>
+      </Routes>
+    </>
   );
 }

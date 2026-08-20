@@ -276,157 +276,59 @@ export function ProductCard({ product }) {
 
           {/* ADD TO CART */}
 
-          <button
-            type="button"
-            disabled={
-              product.stock <= 0 ||
-              adding
-            }
-            onClick={handleAddToCart}
-            className={`
-              group/cart
-              relative
+         <Link
+            to={`/product/${product.slug}`}
+            className="
+              group/view
               flex
               min-h-[44px]
               flex-1
               items-center
               justify-center
               gap-1.5
-              overflow-hidden
               rounded-full
+              border
+              border-[#d7ddce]
+              bg-brand-500
               px-3
               py-3
+              text-center
               text-sm
               font-bold
               text-white
               transition-all
               duration-300
+              hover:-translate-y-0.5
+              hover:border-white
+              hover:bg-brand-700
+              hover:shadow-sm
               active:scale-95
-
-              ${
-                added
-                  ? `
-                    bg-green-700
-                    shadow-lg
-                    shadow-green-900/20
-                  `
-                  : `
-                    bg-brand-700
-                    hover:-translate-y-0.5
-                    hover:bg-brand-800
-                    hover:shadow-lg
-                    hover:shadow-brand-900/20
-                  `
-              }
-
-              disabled:
-              cursor-not-allowed
-              disabled:opacity-50
-              disabled:hover:translate-y-0
-              disabled:hover:shadow-none
-            `}
+            "
           >
+            <span>
+              Add
+            </span>
 
-            {/* Shine */}
-
-            <span
+            <svg
               className="
-                pointer-events-none
-                absolute
-                inset-0
-                -translate-x-full
-                bg-white/10
+                h-4 w-4
                 transition-transform
-                duration-500
-                group-hover/cart:translate-x-0
+                duration-300
+                group-hover/view:translate-x-1
               "
-            />
-
-            {/* LOADING */}
-
-            {adding ? (
-              <>
-                <span
-                  className="
-                    relative
-                    z-10
-                    h-4
-                    w-4
-                    animate-spin
-                    rounded-full
-                    border-2
-                    border-white/30
-                    border-t-white
-                  "
-                />
-
-                <span className="relative z-10">
-                  Adding
-                </span>
-              </>
-            ) : added ? (
-              /* ADDED */
-
-              <>
-                <svg
-                  className="
-                    relative
-                    z-10
-                    h-4
-                    w-4
-                    animate-[scaleIn_0.25s_ease-out]
-                  "
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="m4 10 4 4 8-8"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-
-                <span className="relative z-10">
-                  Added
-                </span>
-              </>
-            ) : (
-              /* DEFAULT */
-
-              <>
-                <span className="relative z-10">
-                  Add
-                </span>
-
-                <svg
-                  className="
-                    relative
-                    z-10
-                    h-4
-                    w-4
-                    transition-transform
-                    duration-300
-                    group-hover/cart:translate-x-1
-                  "
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M4 10h12M11 5l5 5-5 5"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </>
-            )}
-
-          </button>
+              viewBox="0 0 20 20"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 10h11M11 5l5 5-5 5"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
 
         </div>
       </div>
