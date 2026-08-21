@@ -84,6 +84,18 @@ const initialState = {
   error: null,
 };
 
+// ==========================================================
+// IMPORTANT FIX:
+// Ensure axios carries the Authorization header immediately
+// on app load (page refresh), before any component mounts or
+// dispatches loadMe(). Without this, the token exists in
+// Redux/localStorage but every API request goes out WITHOUT
+// the Authorization header until the user logs in again.
+// ==========================================================
+if (initialState.token) {
+  setAuthToken(initialState.token);
+}
+
 // =========================
 // AUTH SLICE
 // =========================
@@ -242,6 +254,17 @@ const authSlice = createSlice({
           action.payload ||
           action.error.message ||
           'Unable to load user';
+
+        // If the token is invalid/expired, clear it so the
+        // app doesn't keep retrying with a bad token.
+        state.token = null;
+        state.user = null;
+
+        if (typeof window !== 'undefined') {
+          window.localStorage.removeItem(tokenKey);
+        }
+
+        setAuthToken(null);
       });
   },
 });
