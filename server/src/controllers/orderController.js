@@ -6,7 +6,6 @@ import { Product } from '../models/productModel.js';
 import { Coupon } from '../models/couponModel.js';
 import { notifyWhatsApp } from '../utils/notifyWhatsApp.js';
 
-
 // ============================================================
 // Generate unique Order ID
 // ============================================================
@@ -17,7 +16,6 @@ function createOrderId() {
     .slice(2, 7)
     .toUpperCase()}`;
 }
-
 
 // ============================================================
 // CREATE ORDER
@@ -31,9 +29,9 @@ export const createOrder = asyncHandler(async (request, response) => {
     couponCode,
   } = request.body;
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // Validate customer + items
-  // ----------------------------------------------------------
+  // ==========================================================
 
   if (
     !customer?.fullName ||
@@ -50,29 +48,38 @@ export const createOrder = asyncHandler(async (request, response) => {
     );
   }
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // Prepare items
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const sanitizedItems = [];
 
   let subtotal = 0;
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // Process every product
-  // ----------------------------------------------------------
+  // ==========================================================
 
   for (const item of items) {
+    // --------------------------------------------------------
+    // Validate product ID
+    // --------------------------------------------------------
+
     if (!item.productId) {
       response.status(400);
+
       throw new Error('Product ID is required');
     }
 
+    // --------------------------------------------------------
     // Find product
+    // --------------------------------------------------------
+
     const product = await Product.findById(item.productId);
 
     if (!product || !product.isActive) {
       response.status(400);
+
       throw new Error('One or more products are invalid');
     }
 
@@ -85,17 +92,18 @@ export const createOrder = asyncHandler(async (request, response) => {
       Number(item.quantity || 1)
     );
 
-
     // ========================================================
-    // VARIANT PRODUCT
+    // PRODUCT WITH VARIANTS
     // ========================================================
-
-    let selectedVariant = null;
 
     if (
       Array.isArray(product.variants) &&
       product.variants.length > 0
     ) {
+      // ------------------------------------------------------
+      // Variant is required
+      // ------------------------------------------------------
+
       if (!item.variantId) {
         response.status(400);
 
@@ -104,9 +112,46 @@ export const createOrder = asyncHandler(async (request, response) => {
         );
       }
 
-      selectedVariant = product.variants.id(item.variantId);
+      // ------------------------------------------------------
+      // Find selected variant
+      //
+      // Supports BOTH:
+      // variant.id
+      // variant._id
+      // ------------------------------------------------------
+
+      const selectedVariant = product.variants.find(
+        (variant) =>
+          String(variant.id || variant._id) ===
+          String(item.variantId)
+      );
+
+      // ------------------------------------------------------
+      // Variant not found
+      // ------------------------------------------------------
 
       if (!selectedVariant) {
+        console.log('====================================');
+        console.log('VARIANT NOT FOUND');
+        console.log('Product:', product.name);
+        console.log(
+          'Frontend Variant ID:',
+          item.variantId
+        );
+
+        console.log(
+          'Available Variants:',
+          product.variants.map((variant) => ({
+            id: variant.id,
+            _id: variant._id,
+            label: variant.label,
+            weight: variant.weight,
+            unit: variant.unit,
+          }))
+        );
+
+        console.log('====================================');
+
         response.status(400);
 
         throw new Error(
@@ -115,10 +160,12 @@ export const createOrder = asyncHandler(async (request, response) => {
       }
 
       // ------------------------------------------------------
-      // Check variant active
+      // Variant active check
       // ------------------------------------------------------
 
-      if (!selectedVariant.isActive) {
+      if (
+        selectedVariant.isActive === false
+      ) {
         response.status(400);
 
         throw new Error(
@@ -127,32 +174,51 @@ export const createOrder = asyncHandler(async (request, response) => {
       }
 
       // ------------------------------------------------------
-      // Check variant stock
+      // Variant stock check
       // ------------------------------------------------------
 
-      if (selectedVariant.stock < quantity) {
+      const variantStock = Number(
+        selectedVariant.stock || 0
+      );
+
+      if (variantStock < quantity) {
         response.status(400);
 
         throw new Error(
-          `Not enough stock for ${product.name} - ${selectedVariant.label}`
+          `Not enough stock for ${product.name} - ${
+            selectedVariant.label ||
+            `${selectedVariant.weight || ''} ${
+              selectedVariant.unit || ''
+            }`
+          }`
         );
       }
 
       // ------------------------------------------------------
-      // IMPORTANT:
-      // Never trust price coming from frontend.
-      // Always use MongoDB variant price.
+      // Always use MongoDB price
       // ------------------------------------------------------
 
-      const price = Number(selectedVariant.price);
+      const price = Number(
+        selectedVariant.price || 0
+      );
 
-      const lineTotal = price * quantity;
+      const lineTotal =
+        price * quantity;
 
       subtotal += lineTotal;
 
+      // ------------------------------------------------------
+      // Get stable variant ID
+      // ------------------------------------------------------
+
+      const variantId = String(
+        selectedVariant.id ||
+        selectedVariant._id ||
+        ''
+      );
 
       // ------------------------------------------------------
-      // Add sanitized variant item
+      // Add sanitized order item
       // ------------------------------------------------------
 
       sanitizedItems.push({
@@ -161,19 +227,23 @@ export const createOrder = asyncHandler(async (request, response) => {
         productName: product.name,
 
         productImage:
-          product.images?.[0] || '',
+          product.images?.[0] ||
+          product.image ||
+          '',
 
-        variantId:
-          selectedVariant._id?.toString() || '',
+        variantId,
 
         variantLabel:
-          selectedVariant.label || '',
+          selectedVariant.label ||
+          '',
 
         variantWeight:
-          selectedVariant.weight ?? null,
+          selectedVariant.weight ??
+          null,
 
         variantUnit:
-          selectedVariant.unit || '',
+          selectedVariant.unit ||
+          '',
 
         price,
 
@@ -182,22 +252,36 @@ export const createOrder = asyncHandler(async (request, response) => {
         subtotal: lineTotal,
       });
 
-
       // ------------------------------------------------------
       // Reduce variant stock
       // ------------------------------------------------------
 
-      selectedVariant.stock -= quantity;
+      selectedVariant.stock =
+        variantStock - quantity;
+
+      // ------------------------------------------------------
+      // IMPORTANT:
+      // Save product after changing variant stock
+      // ------------------------------------------------------
+
+      await product.save();
 
       continue;
     }
-
 
     // ========================================================
     // NORMAL PRODUCT WITHOUT VARIANTS
     // ========================================================
 
-    if (product.stock < quantity) {
+    const productStock = Number(
+      product.stock || 0
+    );
+
+    // --------------------------------------------------------
+    // Normal product stock check
+    // --------------------------------------------------------
+
+    if (productStock < quantity) {
       response.status(400);
 
       throw new Error(
@@ -205,12 +289,22 @@ export const createOrder = asyncHandler(async (request, response) => {
       );
     }
 
-    const price = Number(product.price);
+    // --------------------------------------------------------
+    // Product price
+    // --------------------------------------------------------
 
-    const lineTotal = price * quantity;
+    const price = Number(
+      product.price || 0
+    );
+
+    const lineTotal =
+      price * quantity;
 
     subtotal += lineTotal;
 
+    // --------------------------------------------------------
+    // Add normal product item
+    // --------------------------------------------------------
 
     sanitizedItems.push({
       product: product._id,
@@ -218,7 +312,9 @@ export const createOrder = asyncHandler(async (request, response) => {
       productName: product.name,
 
       productImage:
-        product.images?.[0] || '',
+        product.images?.[0] ||
+        product.image ||
+        '',
 
       variantId: '',
 
@@ -235,20 +331,22 @@ export const createOrder = asyncHandler(async (request, response) => {
       subtotal: lineTotal,
     });
 
-
+    // --------------------------------------------------------
     // Reduce normal product stock
-    product.stock -= quantity;
+    // --------------------------------------------------------
+
+    product.stock =
+      productStock - quantity;
 
     await product.save();
   }
-
 
   // ============================================================
   // DELIVERY CHARGES
   // ============================================================
 
-  const deliveryCharges = subtotal > 0 ? 150 : 0;
-
+  const deliveryCharges =
+    subtotal > 0 ? 150 : 0;
 
   // ============================================================
   // COUPON
@@ -258,16 +356,17 @@ export const createOrder = asyncHandler(async (request, response) => {
 
   let appliedCoupon = null;
 
-
   if (couponCode) {
-    const coupon = await Coupon.findOne({
-      code: String(couponCode).toUpperCase(),
-      active: true,
-    });
+    const coupon =
+      await Coupon.findOne({
+        code: String(
+          couponCode
+        ).toUpperCase(),
 
+        active: true,
+      });
 
     if (coupon) {
-
       // ------------------------------------------------------
       // Check expiry
       // ------------------------------------------------------
@@ -275,7 +374,6 @@ export const createOrder = asyncHandler(async (request, response) => {
       const expired =
         coupon.expiresAt &&
         coupon.expiresAt < new Date();
-
 
       // ------------------------------------------------------
       // Check maximum uses
@@ -285,22 +383,24 @@ export const createOrder = asyncHandler(async (request, response) => {
         coupon.maxUses > 0 &&
         coupon.uses >= coupon.maxUses;
 
-
       if (!expired && !exhausted) {
-
         appliedCoupon = coupon;
-
 
         // ----------------------------------------------------
         // Percentage discount
         // ----------------------------------------------------
 
-        if (coupon.type === 'percent') {
-
-          discountAmount = Math.round(
-            (subtotal * Number(coupon.amount)) / 100
-          );
-
+        if (
+          coupon.type === 'percent'
+        ) {
+          discountAmount =
+            Math.round(
+              (subtotal *
+                Number(
+                  coupon.amount
+                )) /
+                100
+            );
         }
 
         // ----------------------------------------------------
@@ -308,22 +408,24 @@ export const createOrder = asyncHandler(async (request, response) => {
         // ----------------------------------------------------
 
         else {
-
-          discountAmount = Number(
-            coupon.amount
-          );
+          discountAmount =
+            Number(
+              coupon.amount
+            );
         }
 
+        // ----------------------------------------------------
+        // Never discount more than subtotal
+        // ----------------------------------------------------
 
-        // Never allow discount greater than subtotal
-        discountAmount = Math.min(
-          discountAmount,
-          subtotal
-        );
+        discountAmount =
+          Math.min(
+            discountAmount,
+            subtotal
+          );
       }
     }
   }
-
 
   // ============================================================
   // GRAND TOTAL
@@ -336,45 +438,51 @@ export const createOrder = asyncHandler(async (request, response) => {
       deliveryCharges
   );
 
-
   // ============================================================
   // CREATE ORDER
   // ============================================================
 
-  const order = await Order.create({
-    orderId: createOrderId(),
+  const order =
+    await Order.create({
+      orderId:
+        createOrderId(),
 
-    customer,
+      customer,
 
-    customerUser:
-      customerUser || request.user?._id || undefined,
+      customerUser:
+        customerUser ||
+        request.user?._id ||
+        undefined,
 
-    subtotal,
+      subtotal,
 
-    couponCode:
-      appliedCoupon?.code || '',
+      couponCode:
+        appliedCoupon?.code ||
+        '',
 
-    discountAmount,
+      discountAmount,
 
-    deliveryCharges,
+      deliveryCharges,
 
-    grandTotal,
+      grandTotal,
 
-    paymentMethod:
-      request.body.paymentMethod ||
-      'Cash on Delivery',
+      paymentMethod:
+        request.body.paymentMethod ||
+        'Cash on Delivery',
 
-    status: 'Pending',
+      status: 'Pending',
 
-    statusHistory: [
-      {
-        status: 'Pending',
-        note: 'Order created',
-        changedAt: new Date(),
-      },
-    ],
-  });
+      statusHistory: [
+        {
+          status: 'Pending',
 
+          note: 'Order created',
+
+          changedAt:
+            new Date(),
+        },
+      ],
+    });
 
   // ============================================================
   // CREATE ORDER ITEMS
@@ -382,56 +490,51 @@ export const createOrder = asyncHandler(async (request, response) => {
 
   const createdOrderItems = [];
 
+  for (
+    const item of sanitizedItems
+  ) {
+    const orderItem =
+      await OrderItem.create({
+        ...item,
 
-  for (const item of sanitizedItems) {
-
-    const orderItem = await OrderItem.create({
-      ...item,
-
-      order: order._id,
-    });
-
+        order:
+          order._id,
+      });
 
     createdOrderItems.push(
       orderItem._id
     );
   }
 
-
-  // ------------------------------------------------------------
+  // ============================================================
   // Attach order items to order
-  // ------------------------------------------------------------
+  // ============================================================
 
   order.orderItems =
     createdOrderItems;
 
-
   await order.save();
-
 
   // ============================================================
   // COUPON USAGE
   // ============================================================
 
   if (appliedCoupon) {
-
     appliedCoupon.uses =
-      (appliedCoupon.uses || 0) + 1;
+      (appliedCoupon.uses || 0) +
+      1;
 
     await appliedCoupon.save();
   }
-
 
   // ============================================================
   // WHATSAPP NOTIFICATION
   // ============================================================
 
   try {
-
     const itemLines =
       sanitizedItems
         .map((item) => {
-
           const variantText =
             item.variantLabel
               ? ` (${item.variantLabel})`
@@ -440,7 +543,6 @@ export const createOrder = asyncHandler(async (request, response) => {
           return `${item.productName}${variantText} x ${item.quantity} = Rs. ${item.subtotal}`;
         })
         .join('\n');
-
 
     await notifyWhatsApp(
       [
@@ -456,7 +558,7 @@ export const createOrder = asyncHandler(async (request, response) => {
 
         '',
 
-        `Items:`,
+        'Items:',
 
         itemLines,
 
@@ -478,241 +580,247 @@ export const createOrder = asyncHandler(async (request, response) => {
         }`,
       ].join('\n')
     );
-
   } catch (whatsappError) {
+    // WhatsApp failure should NOT cancel order
 
-    // WhatsApp failure should NOT cancel the order
     console.error(
       'WhatsApp notification failed:',
       whatsappError.message
     );
   }
 
-
   // ============================================================
   // RETURN COMPLETE ORDER
   // ============================================================
 
   const populatedOrder =
-    await Order.findById(order._id)
+    await Order.findById(
+      order._id
+    )
       .populate('orderItems')
       .populate(
         'customerUser',
         'name email phone'
       );
 
-
   response.status(201).json({
-    message: 'Order created successfully',
+    message:
+      'Order created successfully',
 
-    order: populatedOrder,
+    order:
+      populatedOrder,
   });
 });
-
 
 // ============================================================
 // GET MY ORDERS
 // ============================================================
 
-export const getMyOrders = asyncHandler(
-  async (request, response) => {
+export const getMyOrders =
+  asyncHandler(
+    async (
+      request,
+      response
+    ) => {
+      const orders =
+        await Order.find({
+          customerUser:
+            request.user._id,
+        })
+          .populate(
+            'orderItems'
+          )
+          .sort({
+            createdAt: -1,
+          });
 
-    const orders =
-      await Order.find({
-        customerUser: request.user._id,
-      })
-        .populate('orderItems')
-        .sort({
-          createdAt: -1,
-        });
-
-
-    response.json({
-      orders,
-    });
-  }
-);
-
+      response.json({
+        orders,
+      });
+    }
+  );
 
 // ============================================================
 // GET SINGLE ORDER
 // ============================================================
 
-export const getOrderById = asyncHandler(
-  async (request, response) => {
+export const getOrderById =
+  asyncHandler(
+    async (
+      request,
+      response
+    ) => {
+      const order =
+        await Order.findById(
+          request.params.id
+        )
+          .populate(
+            'orderItems'
+          )
+          .populate(
+            'customerUser',
+            'name email phone'
+          );
 
-    const order =
-      await Order.findById(
-        request.params.id
-      )
-        .populate('orderItems')
-        .populate(
-          'customerUser',
-          'name email phone'
+      if (!order) {
+        response.status(404);
+
+        throw new Error(
+          'Order not found'
         );
+      }
 
+      // --------------------------------------------------------
+      // Check ownership
+      // --------------------------------------------------------
 
-    if (!order) {
-      response.status(404);
+      const isOwner =
+        order.customerUser?._id?.toString() ===
+        request.user?._id?.toString();
 
-      throw new Error(
-        'Order not found'
-      );
+      if (
+        request.user.role !==
+          'admin' &&
+        !isOwner
+      ) {
+        response.status(403);
+
+        throw new Error(
+          'Not authorized to view this order'
+        );
+      }
+
+      response.json({
+        order,
+      });
     }
-
-
-    // ----------------------------------------------------------
-    // Check ownership
-    // ----------------------------------------------------------
-
-    const isOwner =
-      order.customerUser?._id?.toString() ===
-      request.user?._id?.toString();
-
-
-    if (
-      request.user.role !== 'admin' &&
-      !isOwner
-    ) {
-      response.status(403);
-
-      throw new Error(
-        'Not authorized to view this order'
-      );
-    }
-
-
-    response.json({
-      order,
-    });
-  }
-);
-
+  );
 
 // ============================================================
 // GET ALL ORDERS - ADMIN
 // ============================================================
 
-export const getAllOrders = asyncHandler(
-  async (_request, response) => {
+export const getAllOrders =
+  asyncHandler(
+    async (
+      _request,
+      response
+    ) => {
+      const orders =
+        await Order.find()
+          .populate(
+            'orderItems'
+          )
+          .populate(
+            'customerUser',
+            'name email phone'
+          )
+          .sort({
+            createdAt: -1,
+          });
 
-    const orders =
-      await Order.find()
-        .populate('orderItems')
-        .populate(
-          'customerUser',
-          'name email phone'
-        )
-        .sort({
-          createdAt: -1,
-        });
-
-
-    response.json({
-      orders,
-    });
-  }
-);
-
+      response.json({
+        orders,
+      });
+    }
+  );
 
 // ============================================================
 // UPDATE ORDER STATUS - ADMIN
 // ============================================================
 
-export const updateOrderStatus = asyncHandler(
-  async (request, response) => {
+export const updateOrderStatus =
+  asyncHandler(
+    async (
+      request,
+      response
+    ) => {
+      const {
+        status,
+        note = '',
+      } = request.body;
 
-    const {
-      status,
-      note = '',
-    } = request.body;
+      // --------------------------------------------------------
+      // Allowed statuses
+      // --------------------------------------------------------
 
+      const allowedStatuses = [
+        'Pending',
+        'Confirmed',
+        'Processing',
+        'Delivered',
+        'Cancelled',
+      ];
 
-    // ----------------------------------------------------------
-    // Validate status
-    // ----------------------------------------------------------
+      if (
+        !allowedStatuses.includes(
+          status
+        )
+      ) {
+        response.status(400);
 
-    const allowedStatuses = [
-      'Pending',
-      'Confirmed',
-      'Processing',
-      'Delivered',
-      'Cancelled',
-    ];
+        throw new Error(
+          'Invalid order status'
+        );
+      }
 
+      // --------------------------------------------------------
+      // Find order
+      // --------------------------------------------------------
 
-    if (
-      !allowedStatuses.includes(status)
-    ) {
-      response.status(400);
-
-      throw new Error(
-        'Invalid order status'
-      );
-    }
-
-
-    // ----------------------------------------------------------
-    // Find order
-    // ----------------------------------------------------------
-
-    const order =
-      await Order.findById(
-        request.params.id
-      );
-
-
-    if (!order) {
-      response.status(404);
-
-      throw new Error(
-        'Order not found'
-      );
-    }
-
-
-    // ----------------------------------------------------------
-    // Update status
-    // ----------------------------------------------------------
-
-    order.status =
-      status;
-
-
-    order.statusHistory.push({
-      status,
-
-      note,
-
-      changedAt:
-        new Date(),
-    });
-
-
-    await order.save();
-
-
-    // ----------------------------------------------------------
-    // Return updated order
-    // ----------------------------------------------------------
-
-    const updatedOrder =
-      await Order.findById(
-        order._id
-      )
-        .populate('orderItems')
-        .populate(
-          'customerUser',
-          'name email phone'
+      const order =
+        await Order.findById(
+          request.params.id
         );
 
+      if (!order) {
+        response.status(404);
 
-    response.json({
-      message:
-        `Order marked as ${status}`,
+        throw new Error(
+          'Order not found'
+        );
+      }
 
-      order:
-        updatedOrder,
-    });
-  }
-);
+      // --------------------------------------------------------
+      // Update status
+      // --------------------------------------------------------
+
+      order.status =
+        status;
+
+      order.statusHistory.push({
+        status,
+
+        note,
+
+        changedAt:
+          new Date(),
+      });
+
+      await order.save();
+
+      // --------------------------------------------------------
+      // Return updated order
+      // --------------------------------------------------------
+
+      const updatedOrder =
+        await Order.findById(
+          order._id
+        )
+          .populate(
+            'orderItems'
+          )
+          .populate(
+            'customerUser',
+            'name email phone'
+          );
+
+      response.json({
+        message:
+          `Order marked as ${status}`,
+
+        order:
+          updatedOrder,
+      });
+    }
+  );
