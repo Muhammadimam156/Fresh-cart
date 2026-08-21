@@ -197,7 +197,7 @@ export function AdminDashboard() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#b9862f]">
-            Zaiqa Organics Administration
+            Irfan Kabeer Organic Foods Administration
           </p>
 
           <h1 className="mt-1 text-4xl font-semibold text-brand-900 lg:text-5xl">

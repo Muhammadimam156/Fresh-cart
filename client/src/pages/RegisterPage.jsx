@@ -48,7 +48,7 @@ export function RegisterPage() {
         <div className="p-8 lg:p-10">
 
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#b9862f]">
-            Join Zaiqa Organics
+            Join Us
           </p>
 
           <h1 className="mt-2 text-5xl font-semibold text-brand-900">

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getSettings } from '../api/client';
 
 export function TopBar() {
-  const [whatsAppNumber, setWhatsAppNumber] = useState('0312 889186');
+  const [whatsAppNumber, setWhatsAppNumber] = useState('92 325 0026250');
 
   useEffect(() => {
     let mounted = true;

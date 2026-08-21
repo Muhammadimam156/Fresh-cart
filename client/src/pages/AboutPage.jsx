@@ -12,7 +12,7 @@ export function AboutPage() {
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#b9862f]">About Us</p>
             <h1 className="mt-3 text-5xl font-semibold text-brand-900">Rooted in Quality, Crafted for Daily Living</h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-[#5f6d5d]">
-              Zaiqa Organics brings naturally sourced grocery essentials with strict quality checks and customer-first service for homes across Pakistan.
+              Irfan Kabeer Organic Foods brings naturally sourced grocery essentials with strict quality checks and customer-first service for homes across Pakistan.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               {trustPoints.map((item) => (

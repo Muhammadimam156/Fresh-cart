@@ -123,35 +123,37 @@ export function HomePage() {
 
       {/* =====================================================
           HERO SECTION
+          Mobile: compact so categories/products are reachable
+          fast. Desktop: full, spacious layout (unchanged feel).
       ====================================================== */}
       <section className="relative bg-[#f8f4e8]">
-        <div className="section-shell grid min-h-[650px] items-center gap-10 py-12 lg:grid-cols-2 lg:py-20">
+        <div className="section-shell grid items-center gap-8 py-8 sm:gap-10 sm:py-10 lg:min-h-[650px] lg:grid-cols-2 lg:py-20">
 
           {/* Content */}
           <div className="relative z-10">
 
-            <div className="mb-5 inline-flex animate-[fadeInUp_.6s_ease-out] items-center gap-2 rounded-full border border-[#d8c99e] bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#8b6828]">
+            <div className="mb-4 inline-flex animate-[fadeInUp_.6s_ease-out] items-center gap-2 rounded-full border border-[#d8c99e] bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#8b6828] sm:mb-5">
               <span className="h-2 w-2 rounded-full bg-[#b9862f]" />
               100% Organic Desi Food Products in Pakistan
             </div>
 
-            <h1 className="max-w-2xl animate-[fadeInUp_.8s_ease-out] text-6xl font-semibold leading-[0.95] text-[#243522] sm:text-7xl lg:text-8xl">
+            <h1 className="max-w-2xl animate-[fadeInUp_.8s_ease-out] text-4xl font-semibold leading-[1.05] text-[#243522] sm:text-6xl sm:leading-[0.95] lg:text-7xl xl:text-8xl">
               Pure Taste.
               <span className="block text-[#8a6428]">
                 Desi Tradition.
               </span>
             </h1>
 
-            <p className="mt-7 max-w-xl animate-[fadeInUp_1s_ease-out] text-lg leading-8 text-[#687064]">
+            <p className="mt-4 max-w-xl animate-[fadeInUp_1s_ease-out] text-base leading-7 text-[#687064] sm:mt-7 sm:text-lg sm:leading-8">
               Shop authentic, organic desi food products online — pure honey,
               fresh flour, premium rice, and traditional Pakistani spices,
               delivered fresh to your doorstep across Pakistan.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
               <Link
                 to="/shop"
-                className="group inline-flex items-center gap-2 rounded-full bg-[#285c30] px-7 py-4 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1d4824] hover:shadow-xl active:scale-95"
+                className="group inline-flex items-center gap-2 rounded-full bg-[#285c30] px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1d4824] hover:shadow-xl active:scale-95 sm:px-7 sm:py-4"
               >
                 Shop Now
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -160,16 +162,16 @@ export function HomePage() {
               </Link>
 
               <a
-                href="https://wa.me/0312889186"
+                href="https://wa.me/923250026250"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-[#c9d0c2] bg-white px-7 py-4 text-sm font-bold text-[#30432f] transition-all duration-300 hover:-translate-y-1 hover:bg-[#f4f1e6] active:scale-95"
+                className="inline-flex items-center gap-2 rounded-full border border-[#c9d0c2] bg-white px-6 py-3.5 text-sm font-bold text-[#30432f] transition-all duration-300 hover:-translate-y-1 hover:bg-[#f4f1e6] active:scale-95 sm:px-7 sm:py-4"
               >
                 Order on WhatsApp
               </a>
             </div>
 
-            <div className="mt-10 flex flex-wrap gap-7 text-sm text-[#657060]">
+            <div className="mt-6 flex flex-wrap gap-5 text-sm text-[#657060] sm:mt-10 sm:gap-7">
               <div>
                 <strong className="block text-xl text-[#29412c]">
                   100%
@@ -193,24 +195,24 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Hero Image */}
+          {/* Hero Image — shorter on mobile so the page moves faster */}
           <div className="relative">
-            <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#d9c38b]/30 blur-3xl" />
-            <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[#7c9a67]/20 blur-3xl" />
+            <div className="absolute -right-10 -top-10 hidden h-40 w-40 rounded-full bg-[#d9c38b]/30 blur-3xl sm:block" />
+            <div className="absolute -bottom-10 -left-10 hidden h-48 w-48 rounded-full bg-[#7c9a67]/20 blur-3xl sm:block" />
 
-            <div className="relative overflow-hidden rounded-[3rem] border-[10px] border-white shadow-2xl">
+            <div className="relative overflow-hidden rounded-[2rem] border-[6px] border-white shadow-2xl sm:rounded-[3rem] sm:border-[10px]">
               <img
                 src="https://images.pexels.com/photos/8820432/pexels-photo-8820432.jpeg"
                 alt="Authentic organic desi food products from Pakistan"
-                className="h-[520px] w-full object-cover transition-transform duration-700 hover:scale-105"
+                className="h-[220px] w-full object-cover transition-transform duration-700 hover:scale-105 sm:h-[360px] lg:h-[520px]"
               />
 
-              <div className="absolute bottom-5 left-5 right-5 rounded-3xl bg-white/90 p-5 shadow-xl backdrop-blur">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#a2762c]">
+              <div className="absolute bottom-3 left-3 right-3 rounded-2xl bg-white/90 p-3 shadow-xl backdrop-blur sm:bottom-5 sm:left-5 sm:right-5 sm:rounded-3xl sm:p-5">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a2762c] sm:text-xs">
                   Our Promise
                 </p>
 
-                <p className="mt-1 font-semibold text-[#273727]">
+                <p className="mt-1 text-sm font-semibold text-[#273727] sm:text-base">
                   Bringing authentic, chemical-free desi taste to your home.
                 </p>
               </div>
@@ -222,7 +224,7 @@ export function HomePage() {
       {/* =====================================================
           CATEGORIES
       ====================================================== */}
-      <section className="section-shell py-16 lg:py-20">
+      <section className="section-shell py-10 lg:py-20">
 
         <div className="flex items-end justify-between gap-5">
           <div>
@@ -230,11 +232,11 @@ export function HomePage() {
               Shop by Category
             </p>
 
-            <h2 className="mt-2 text-5xl font-semibold text-[#253625]">
+            <h2 className="mt-2 text-3xl font-semibold text-[#253625] sm:text-5xl">
               Explore Our Desi Food Categories
             </h2>
 
-            <p className="mt-3 max-w-xl text-[#70796e]">
+            <p className="mt-3 max-w-xl text-sm text-[#70796e] sm:text-base">
               Everything you need for an authentic, organic desi kitchen — handpicked and quality-checked.
             </p>
           </div>
@@ -247,7 +249,7 @@ export function HomePage() {
           </Link>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:mt-8 md:grid-cols-4">
           {categories.slice(0, 4).map((category, index) => {
             const slug =
               category.slug ||
@@ -296,7 +298,7 @@ export function HomePage() {
       {/* =====================================================
           LATEST PRODUCTS
       ====================================================== */}
-      <section className="bg-[#f3f0e6] py-16 lg:py-20">
+      <section className="bg-[#f3f0e6] py-10 lg:py-20">
         <div className="section-shell">
 
           <div className="flex items-end justify-between gap-5">
@@ -305,11 +307,11 @@ export function HomePage() {
                 New Arrivals
               </p>
 
-              <h2 className="mt-2 text-5xl font-semibold text-[#253625]">
+              <h2 className="mt-2 text-3xl font-semibold text-[#253625] sm:text-5xl">
                 Fresh Additions to Our Store
               </h2>
 
-              <p className="mt-3 text-[#70796e]">
+              <p className="mt-3 text-sm text-[#70796e] sm:text-base">
                 Be the first to try our newest organic and desi products.
               </p>
             </div>
@@ -325,7 +327,7 @@ export function HomePage() {
           {loading ? (
             <ProductSkeleton />
           ) : latestProducts.length > 0 ? (
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
               {latestProducts.map((product) => (
                 <div
                   key={product._id || product.id || product.slug}
@@ -344,18 +346,18 @@ export function HomePage() {
       {/* =====================================================
           BEST SELLERS
       ====================================================== */}
-      <section className="section-shell py-16 lg:py-20">
+      <section className="section-shell py-10 lg:py-20">
 
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#b9862f]">
             Customer Favorites
           </p>
 
-          <h2 className="mt-2 text-5xl font-semibold text-[#253625]">
+          <h2 className="mt-2 text-3xl font-semibold text-[#253625] sm:text-5xl">
             Our Best Selling Desi Products
           </h2>
 
-          <p className="mx-auto mt-3 max-w-xl text-[#70796e]">
+          <p className="mx-auto mt-3 max-w-xl text-sm text-[#70796e] sm:text-base">
             Trusted by hundreds of customers across Pakistan — the products people keep reordering.
           </p>
         </div>
@@ -363,7 +365,7 @@ export function HomePage() {
         {loading ? (
           <ProductSkeleton />
         ) : bestProducts.length > 0 ? (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
             {bestProducts.map((product) => (
               <div
                 key={product._id || product.id || product.slug}
@@ -381,7 +383,7 @@ export function HomePage() {
       {/* =====================================================
           WHY US
       ====================================================== */}
-      <section className="bg-[#24462a] py-16 text-white lg:py-20">
+      <section className="bg-[#24462a] py-10 text-white lg:py-20">
         <div className="section-shell">
 
           <div className="mx-auto max-w-2xl text-center">
@@ -389,12 +391,12 @@ export function HomePage() {
               Why Choose Us
             </p>
 
-            <h2 className="mt-2 text-5xl font-semibold">
+            <h2 className="mt-2 text-3xl font-semibold sm:text-5xl">
               Pakistan's Trusted Organic Food Store
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-5 sm:mt-12 md:grid-cols-2 lg:grid-cols-4">
 
             <Feature
               icon="🌿"
@@ -427,31 +429,31 @@ export function HomePage() {
       {/* =====================================================
           WHATSAPP CTA
       ====================================================== */}
-      <section className="section-shell py-16 lg:py-20">
-        <div className="relative overflow-hidden rounded-[3rem] bg-[#f2e7ca] px-6 py-14 text-center sm:px-10">
+      <section className="section-shell py-10 lg:py-20">
+        <div className="relative overflow-hidden rounded-[2rem] bg-[#f2e7ca] px-5 py-10 text-center sm:rounded-[3rem] sm:px-10 sm:py-14">
 
-          <div className="absolute -left-20 -top-20 h-52 w-52 rounded-full bg-white/40 blur-2xl" />
-          <div className="absolute -bottom-20 -right-20 h-52 w-52 rounded-full bg-[#b8c69e]/40 blur-2xl" />
+          <div className="absolute -left-20 -top-20 hidden h-52 w-52 rounded-full bg-white/40 blur-2xl sm:block" />
+          <div className="absolute -bottom-20 -right-20 hidden h-52 w-52 rounded-full bg-[#b8c69e]/40 blur-2xl sm:block" />
 
           <div className="relative">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#98702d]">
               Need Help?
             </p>
 
-            <h2 className="mt-3 text-5xl font-semibold text-[#293a28]">
+            <h2 className="mt-3 text-3xl font-semibold text-[#293a28] sm:text-5xl">
               Order Fresh Desi Products in Minutes
             </h2>
 
-            <p className="mx-auto mt-4 max-w-xl text-[#6c7568]">
+            <p className="mx-auto mt-4 max-w-xl text-sm text-[#6c7568] sm:text-base">
               Message us on WhatsApp and our team will help you place your
               order quickly, with fast delivery anywhere in Pakistan.
             </p>
 
             <a
-              href="https://wa.me/0312889186"
+              href="https://wa.me/923250026250"
               target="_blank"
               rel="noreferrer"
-              className="mt-7 inline-flex items-center gap-3 rounded-full bg-[#285c30] px-8 py-4 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1c4823] hover:shadow-2xl active:scale-95"
+              className="mt-6 inline-flex items-center gap-3 rounded-full bg-[#285c30] px-7 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1c4823] hover:shadow-2xl active:scale-95 sm:mt-7 sm:px-8 sm:py-4"
             >
               <span className="text-xl">☘</span>
               Order on WhatsApp
@@ -495,7 +497,7 @@ function Feature({ icon, title, text }) {
 
 function ProductSkeleton() {
   return (
-    <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
       {[1, 2, 3, 4].map((item) => (
         <div
           key={item}

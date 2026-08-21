@@ -8,7 +8,7 @@ export function SiteFooter() {
           <div className="flex items-center gap-3 font-bold text-white">
             <span className="grid h-10 w-10 place-items-center rounded-full border border-brand-200/30 bg-brand-800 text-sm">FK</span>
             <span>
-              <span className="block text-lg">Zaiqa Organics</span>
+              <span className="block text-lg">Irfan Kabeer Organic Foods</span>
               <span className="block text-xs font-medium text-brand-100/80">Pure Taste • Healthy Life</span>
             </span>
           </div>
@@ -46,8 +46,8 @@ export function SiteFooter() {
         <div className="text-sm text-brand-100/85">
           <h2 className="text-base font-bold text-white">Contact Us</h2>
           <div className="mt-4 grid gap-2">
-            <span>WhatsApp: 0312889186</span>
-            <span>Phone: 0312889186</span>
+            <span>WhatsApp: 92 325 0026250</span>
+            <span>Phone: 92 312 889186</span>
             <span>Email: ikorganicfoods09@gmail.com</span>
             <span>Address: Karachi, Pakistan</span>
           </div>
@@ -60,7 +60,7 @@ export function SiteFooter() {
 
       <div className="border-t border-brand-800/70">
         <div className="section-shell flex flex-wrap items-center justify-between gap-3 py-4 text-xs text-brand-100/80">
-          <span>© {new Date().getFullYear()} Zaiqa Organics. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Irfan Kabeer Organic Foods. All rights reserved.</span>
           <span>Cash on Delivery • Secure Ordering • Pakistan Delivery</span>
         </div>
       </div>

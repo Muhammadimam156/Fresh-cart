@@ -27,8 +27,8 @@ export function ContactPage() {
           <h1 className="mt-2 text-5xl font-semibold text-brand-900">Get in touch</h1>
           <p className="mt-3 text-[#60705f]">We are here to help with product inquiries, bulk orders, and support.</p>
           <div className="mt-6 grid gap-3 text-sm text-[#4a5847]">
-            <div className="rounded-2xl bg-[#f8f4ea] p-4">WhatsApp:0312 889186</div>
-            <div className="rounded-2xl bg-[#f8f4ea] p-4">Phone: 0312 889186</div>
+            <div className="rounded-2xl bg-[#f8f4ea] p-4">WhatsApp: 92 325 0026250</div>
+            <div className="rounded-2xl bg-[#f8f4ea] p-4">Phone: 92 312 889186</div>
             <div className="rounded-2xl bg-[#f8f4ea] p-4">Email: ikorganicfoods09@gmail.com</div>
             <div className="rounded-2xl bg-[#f8f4ea] p-4">Address: rawalpindi, Pakistan</div>
           </div>

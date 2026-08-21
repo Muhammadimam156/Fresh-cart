@@ -43,9 +43,9 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-[#e4e4da] bg-white/95 backdrop-blur">
       <div className="section-shell flex items-center justify-between gap-3 py-3">
         <Link to="/" className="flex items-center gap-3 font-bold text-brand-900">
-          <span className="grid h-10 w-10 place-items-center rounded-full border border-[#d8d2c4] bg-organic-cream text-sm">Z</span>
+          <span className="grid h-10 w-10 place-items-center rounded-full border border-[#d8d2c4] bg-organic-cream text-sm">IK</span>
           <span>
-            <span className="block text-lg leading-5">Zaiqa Organics</span>
+            <span className="block text-lg leading-5">Irfan Kabeer Organic Foods</span>
             <span className="block text-[11px] font-semibold text-[#7b7f72]">Pure Taste • Healthy Life</span>
           </span>
         </Link>
@@ -103,7 +103,7 @@ export function SiteHeader() {
             Cart ({cartCount})
           </Link>
           <a
-            href={`https://wa.me/0312889186`}
+            href={`https://wa.me/923250026250`}
             target="_blank"
             rel="noreferrer"
             className="hidden rounded-full bg-brand-800 px-4 py-2 text-xs font-bold text-white lg:inline-flex"
