@@ -71,12 +71,34 @@ export default function App() {
           />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
-        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="categories" element={<AdminCategories />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="orders" element={<AdminOrders />} />
-        </Route>
+        <Route
+  path="/admin"
+  element={
+    <ProtectedRoute adminOnly>
+      <AdminLayout />
+    </ProtectedRoute>
+  }
+>
+  <Route
+    index
+    element={<AdminDashboard />}
+  />
+
+  <Route
+    path="categories"
+    element={<AdminCategories />}
+  />
+
+  <Route
+    path="products"
+    element={<AdminProducts />}
+  />
+
+  <Route
+    path="orders"
+    element={<AdminOrders />}
+  />
+</Route>
       </Routes>
     </>
   );
