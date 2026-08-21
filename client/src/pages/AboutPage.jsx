@@ -23,9 +23,9 @@ export function AboutPage() {
           </div>
           <div className="organic-card overflow-hidden p-3">
             <img
-              src="https://unsplash.com/photos/clear-glass-jar-with-brown-liquid-Asj5DFw8UAw"
+              src="https://images.unsplash.com/photo-1662675109209-40eb61087bdb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bnV0cyUyMHdpdGglMjBob25leXxlbnwwfHwwfHx8MA%3D%3D"
               alt="Organic grocery collection"
-              className="h-full min-h-[340px] w-full rounded-3xl object-cover"
+              className="h-1 min-h-[340px] w-full rounded-3xl object-cover"
               loading="lazy"
             />
           </div>
