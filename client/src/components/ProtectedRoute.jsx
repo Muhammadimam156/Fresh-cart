@@ -15,6 +15,10 @@ export function ProtectedRoute({
     (state) => state.auth.user
   );
 
+  const initialized = useSelector(
+    (state) => state.auth.initialized
+  );
+
   // Login nahi hai
   if (!token) {
     return (
@@ -26,13 +30,21 @@ export function ProtectedRoute({
     );
   }
 
+  // Token hai lekin abhi tak loadMe() ka pehla attempt
+  // complete nahi hua — user data load hone tak wait karo,
+  // warna time se pehle redirect ho jayega.
+  if (!initialized) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-sm font-semibold text-brand-900">
+          Loading...
+        </p>
+      </div>
+    );
+  }
+
   // Admin route
   if (adminOnly) {
-    console.log('ADMIN ROUTE CHECK');
-    console.log('Token:', !!token);
-    console.log('User:', user);
-    console.log('User role:', user?.role);
-
     if (user?.role !== 'admin') {
       return (
         <Navigate

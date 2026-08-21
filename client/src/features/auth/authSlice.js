@@ -82,6 +82,16 @@ const initialState = {
   status: 'idle',
 
   error: null,
+
+  // If there's no token, there's nothing to load, so we're
+  // "initialized" immediately. If there IS a token, we stay
+  // uninitialized until the first loadMe() attempt finishes
+  // (success or fail) — this prevents ProtectedRoute from
+  // redirecting away before the user data has a chance to load.
+  initialized:
+    typeof window !== 'undefined'
+      ? !window.localStorage.getItem(tokenKey)
+      : true,
 };
 
 // ==========================================================
@@ -240,6 +250,7 @@ const authSlice = createSlice({
       .addCase(loadMe.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.error = null;
+        state.initialized = true;
 
         state.user = action.payload.user;
       })
@@ -249,6 +260,7 @@ const authSlice = createSlice({
       // ==========================================
       .addCase(loadMe.rejected, (state, action) => {
         state.status = 'failed';
+        state.initialized = true;
 
         state.error =
           action.payload ||
