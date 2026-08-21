@@ -420,6 +420,12 @@ export function AdminOrders() {
                               {item.productName}
                             </p>
 
+                            {item.variantLabel && (
+                              <p className="mt-1 inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-bold text-brand-700">
+                                ⚖ {item.variantLabel}
+                              </p>
+                            )}
+
                             <p className="mt-1 text-sm text-[#637260]">
                               Rs. {item.price} × {item.quantity}
                             </p>
