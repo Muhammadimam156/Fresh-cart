@@ -19,7 +19,7 @@ export function CheckoutPage() {
 
   const totals = useMemo(() => {
     const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const delivery = items.length ? 150 : 0;
+    const delivery = items.length ? 250 : 0;
     const discount = couponInfo ? (couponInfo.coupon.type === 'percent' ? Math.round((subtotal * couponInfo.coupon.amount) / 100) : Number(couponInfo.coupon.amount)) : 0;
     const grandTotal = Math.max(0, subtotal - discount + delivery);
     return { subtotal, delivery, discount, grandTotal };
