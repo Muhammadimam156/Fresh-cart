@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { SiteLayout } from './components/SiteLayout';
 import { GenericPage } from './components/GenericPage';
 import { HomePage } from './pages/HomePage';
@@ -22,6 +24,7 @@ import { AdminProducts } from './admin/ProductsPage';
 import { AdminOrders } from './admin/OrdersPage';
 import { MyOrdersPage } from './pages/MyOrdersPage';
 import { ScrollToTop } from './components/ScrollToTop';
+import { loadMe } from './features/auth/authSlice';
 
 const simpleRoutes = [
   ['/forgot-password', 'Forgot Password'],
@@ -33,6 +36,16 @@ const simpleRoutes = [
 ];
 
 export default function App() {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (token && !user) {
+      dispatch(loadMe());
+    }
+  }, [token, user, dispatch]);
+
   return (
     <>
       <ScrollToTop />
@@ -71,7 +84,7 @@ export default function App() {
           />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
-        <Route
+      <Route
   path="/admin"
   element={
     <ProtectedRoute adminOnly>
@@ -79,25 +92,10 @@ export default function App() {
     </ProtectedRoute>
   }
 >
-  <Route
-    index
-    element={<AdminDashboard />}
-  />
-
-  <Route
-    path="categories"
-    element={<AdminCategories />}
-  />
-
-  <Route
-    path="products"
-    element={<AdminProducts />}
-  />
-
-  <Route
-    path="orders"
-    element={<AdminOrders />}
-  />
+  <Route index element={<AdminDashboard />} />
+  <Route path="categories" element={<AdminCategories />} />
+  <Route path="products" element={<AdminProducts />} />
+  <Route path="orders" element={<AdminOrders />} />
 </Route>
       </Routes>
     </>

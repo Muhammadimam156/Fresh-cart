@@ -15,36 +15,32 @@ export function ProtectedRoute({
     (state) => state.auth.user
   );
 
-  // --------------------------------------------------
-  // User is not logged in
-  // --------------------------------------------------
-
+  // Login nahi hai
   if (!token) {
     return (
       <Navigate
         to="/login"
         replace
-        state={{
-          from: location,
-        }}
+        state={{ from: location }}
       />
     );
   }
 
-  // --------------------------------------------------
-  // Admin-only route
-  // --------------------------------------------------
+  // Admin route
+  if (adminOnly) {
+    console.log('ADMIN ROUTE CHECK');
+    console.log('Token:', !!token);
+    console.log('User:', user);
+    console.log('User role:', user?.role);
 
-  if (
-    adminOnly &&
-    user?.role !== 'admin'
-  ) {
-    return (
-      <Navigate
-        to="/"
-        replace
-      />
-    );
+    if (user?.role !== 'admin') {
+      return (
+        <Navigate
+          to="/"
+          replace
+        />
+      );
+    }
   }
 
   return children;
