@@ -1,6 +1,25 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export function SiteFooter() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  function handleSubscribe(event) {
+    event.preventDefault();
+
+    if (!email.trim()) return;
+
+    alert("Thanks for subscribing! We'll keep you updated. 🌿");
+
+    setEmail('');
+    setSubscribed(true);
+
+    setTimeout(() => {
+      setSubscribed(false);
+    }, 10000);
+  }
+
   return (
     <footer className="mt-16 bg-brand-900 text-brand-50">
       <div className="section-shell grid gap-10 py-12 md:grid-cols-2 xl:grid-cols-5">
@@ -51,9 +70,36 @@ export function SiteFooter() {
             <span>Email: ikorganicfoods09@gmail.com</span>
             <span>Address: Karachi, Pakistan</span>
           </div>
-          <form className="mt-4 flex gap-2">
-            <input className="w-full rounded-full border border-brand-200/30 bg-brand-800 px-4 py-2 text-xs text-white outline-none" placeholder="Your email" />
-            <button type="button" className="rounded-full bg-[#b9862f] px-4 py-2 text-xs font-bold text-white">Subscribe</button>
+
+          <form onSubmit={handleSubscribe} className="mt-4 flex gap-2">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={subscribed}
+              className="w-full rounded-full border border-brand-200/30 bg-brand-800 px-4 py-2 text-xs text-white outline-none placeholder:text-brand-100/50 disabled:opacity-50"
+              placeholder="Your email"
+            />
+
+            <button
+              type="submit"
+              disabled={subscribed}
+              className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold text-white transition-all duration-300 active:scale-95 ${
+                subscribed
+                  ? 'cursor-not-allowed bg-green-700'
+                  : 'bg-[#b9862f] hover:bg-[#a2762c]'
+              }`}
+            >
+              {subscribed ? (
+                <span className="flex items-center gap-1.5">
+                  <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Subscribed
+                </span>
+              ) : (
+                'Subscribe'
+              )}
+            </button>
           </form>
         </div>
       </div>
