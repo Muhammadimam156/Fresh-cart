@@ -426,7 +426,7 @@ export function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-8 grid gap-5 sm:mt-12 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-5 sm:mt-12 md:grid-cols-2 bg-[#f2e7ca] lg:grid-cols-4">
 
             <Feature
               icon="🌿"
