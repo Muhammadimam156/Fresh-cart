@@ -426,7 +426,7 @@ export function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-8 grid gap-5 sm:mt-12 md:grid-cols-2 bg-[#f2e7ca] lg:grid-cols-4">
+          <div className="mt-8 grid gap-5 sm:mt-12 md:grid-cols-2 lg:grid-cols-4">
 
             <Feature
               icon="🌿"
@@ -504,16 +504,16 @@ export function HomePage() {
 
 function Feature({ icon, title, text }) {
   return (
-    <div className="group rounded-[2rem] border border-white/10 bg-white/5 p-6 text-center transition-all duration-500 hover:-translate-y-2 hover:bg-white/10">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-3xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+    <div className="group rounded-3xl bg-[#f6f1de] p-6 text-center shadow-lg shadow-black/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/20">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#285c30] text-3xl shadow-md shadow-[#285c30]/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
         {icon}
       </div>
 
-      <h3 className="mt-5 text-xl font-semibold">
+      <h3 className="mt-5 text-lg font-bold text-[#243522]">
         {title}
       </h3>
 
-      <p className="mt-2 text-sm leading-6 text-white/70">
+      <p className="mt-2 text-sm leading-6 text-[#5c6558]">
         {text}
       </p>
     </div>
