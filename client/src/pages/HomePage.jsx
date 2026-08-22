@@ -126,6 +126,14 @@ export function HomePage() {
           Mobile: compact so categories/products are reachable
           fast. Desktop: full, spacious layout (unchanged feel).
       ====================================================== */}
+      {/* =====================================================
+          MOBILE REORDER WRAPPER
+          On mobile: Categories/Products come first, Hero second.
+          On tablet/desktop (sm+): normal order (Hero first).
+      ====================================================== */}
+      <div className="flex flex-col">
+
+      <div className="order-2 sm:order-1">
       <section className="relative bg-[#f8f4e8]">
         <div className="section-shell grid items-center gap-8 py-8 sm:gap-10 sm:py-10 lg:min-h-[650px] lg:grid-cols-2 lg:py-20">
 
@@ -236,10 +244,12 @@ export function HomePage() {
         <span className="h-1 w-1 rounded-full bg-[#c9b27a]" />
         <span>💵 COD</span>
       </div>
+      </div>
 
       {/* =====================================================
           CATEGORIES
       ====================================================== */}
+      <div className="order-1 sm:order-2">
       <section className="section-shell py-10 lg:py-20">
 
         <div className="flex items-end justify-between gap-5">
@@ -310,6 +320,10 @@ export function HomePage() {
           })}
         </div>
       </section>
+      </div>
+
+      </div>
+      {/* END MOBILE REORDER WRAPPER */}
 
       {/* =====================================================
           LATEST PRODUCTS
