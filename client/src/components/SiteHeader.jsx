@@ -43,7 +43,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-[#e4e4da] bg-white/95 backdrop-blur">
       <div className="section-shell flex items-center justify-between gap-3 py-3">
         <Link to="/" className="flex items-center gap-3 font-bold text-brand-900">
-          <span className="grid h-10 w-10 place-items-center rounded-full border border-[#d8d2c4] bg-organic-cream text-sm">IK</span>
+          <img
+            src="/logo.jpg"
+            alt="Irfan Kabeer Organic Foods"
+            className="h-10 w-10 rounded-full border border-[#d8d2c4] object-cover"
+          />
           <span>
             <span className="block text-lg leading-5">Irfan Kabeer Organic Foods</span>
             <span className="block text-[11px] font-semibold text-[#7b7f72]">Pure Taste • Healthy Life</span>
