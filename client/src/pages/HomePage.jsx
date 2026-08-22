@@ -162,7 +162,7 @@ export function HomePage() {
               </Link>
 
               <a
-                href="https://wa.me/923250026250"
+                href="https://wa.me/0312889186"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-[#c9d0c2] bg-white px-6 py-3.5 text-sm font-bold text-[#30432f] transition-all duration-300 hover:-translate-y-1 hover:bg-[#f4f1e6] active:scale-95 sm:px-7 sm:py-4"
@@ -171,7 +171,7 @@ export function HomePage() {
               </a>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-5 text-sm text-[#657060] sm:mt-10 sm:gap-7">
+            <div className="mt-6 hidden flex-wrap gap-5 text-sm text-[#657060] sm:mt-10 sm:flex sm:gap-7">
               <div>
                 <strong className="block text-xl text-[#29412c]">
                   100%
@@ -195,8 +195,10 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Hero Image — shorter on mobile so the page moves faster */}
-          <div className="relative">
+          {/* Hero Image — hidden on mobile entirely so products
+              are reachable within the first scroll. Visible from
+              tablet size up, where there's room for it. */}
+          <div className="relative hidden sm:block">
             <div className="absolute -right-10 -top-10 hidden h-40 w-40 rounded-full bg-[#d9c38b]/30 blur-3xl sm:block" />
             <div className="absolute -bottom-10 -left-10 hidden h-48 w-48 rounded-full bg-[#7c9a67]/20 blur-3xl sm:block" />
 
@@ -220,6 +222,20 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* =====================================================
+          MOBILE ONLY: Trust strip — replaces the hero image and
+          stats row on small screens with a slim single line, so
+          the categories/products grid below is visible almost
+          immediately without heavy scrolling.
+      ====================================================== */}
+      <div className="flex items-center justify-center gap-4 border-y border-[#e7dfc4] bg-[#fbf7ea] px-4 py-2.5 text-[11px] font-bold text-[#8b6828] sm:hidden">
+        <span>🌿 100% Organic</span>
+        <span className="h-1 w-1 rounded-full bg-[#c9b27a]" />
+        <span>🚚 Fast Delivery</span>
+        <span className="h-1 w-1 rounded-full bg-[#c9b27a]" />
+        <span>💵 COD</span>
+      </div>
 
       {/* =====================================================
           CATEGORIES
@@ -450,7 +466,7 @@ export function HomePage() {
             </p>
 
             <a
-              href="https://wa.me/923250026250"
+              href="https://wa.me/0312889186"
               target="_blank"
               rel="noreferrer"
               className="mt-6 inline-flex items-center gap-3 rounded-full bg-[#285c30] px-7 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1c4823] hover:shadow-2xl active:scale-95 sm:mt-7 sm:px-8 sm:py-4"
