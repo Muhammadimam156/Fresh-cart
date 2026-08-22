@@ -133,10 +133,33 @@ export function ShopPage() {
 
   /* --------------------------------
      Load Products + Categories
+     (with retry so a cold-start / transient failure doesn't
+     flash "No products found" before the real data arrives —
+     the skeleton stays visible until we have a real answer)
   -------------------------------- */
 
   useEffect(() => {
     let mounted = true;
+
+    async function fetchWithRetry(fetchFn, retries = 2, delayMs = 1200) {
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        const result = await fetchFn();
+
+        // getCategories()/getProducts() return null on failure.
+        // Any non-null result (even an empty array) is accepted.
+        if (result !== null) {
+          return result;
+        }
+
+        if (attempt < retries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, delayMs)
+          );
+        }
+      }
+
+      return null;
+    }
 
     async function loadData() {
       try {
@@ -144,11 +167,20 @@ export function ShopPage() {
         setError('');
 
         const [apiCategories, apiProducts] = await Promise.all([
-          getCategories(),
-          getProducts(),
+          fetchWithRetry(getCategories),
+          fetchWithRetry(getProducts),
         ]);
 
         if (!mounted) return;
+
+        if (apiCategories === null && apiProducts === null) {
+          setError(
+            'We could not load the products right now. Please try again.'
+          );
+          setCategories([]);
+          setProducts([]);
+          return;
+        }
 
         setCategories(apiCategories || []);
 
