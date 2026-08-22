@@ -276,7 +276,12 @@ export function HomePage() {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:mt-8 md:grid-cols-4">
-          {categories.slice(0, 4).map((category, index) => {
+          {loading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <CategorySkeleton key={index} />
+            ))
+          ) : (
+            categories.slice(0, 4).map((category, index) => {
             const slug =
               category.slug ||
               category._id ||
@@ -317,7 +322,8 @@ export function HomePage() {
                 </div>
               </Link>
             );
-          })}
+          })
+          )}
         </div>
       </section>
       </div>
@@ -413,15 +419,15 @@ export function HomePage() {
       {/* =====================================================
           WHY US
       ====================================================== */}
-      <section className="bg-[#24462a] py-10 text-white lg:py-20">
+      <section className="bg-[#f6f1de] py-10 lg:py-20">
         <div className="section-shell">
 
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d8bb73]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#a2762c]">
               Why Choose Us
             </p>
 
-            <h2 className="mt-2 text-3xl font-semibold sm:text-5xl">
+            <h2 className="mt-2 text-3xl font-semibold text-[#243522] sm:text-5xl">
               Pakistan's Trusted Organic Food Store
             </h2>
           </div>
@@ -504,18 +510,37 @@ export function HomePage() {
 
 function Feature({ icon, title, text }) {
   return (
-    <div className="group rounded-3xl bg-[#f6f1de] p-6 text-center shadow-lg shadow-black/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/20">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#285c30] text-3xl shadow-md shadow-[#285c30]/30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+    <div className="group rounded-3xl bg-[#24462a] p-6 text-center shadow-lg shadow-black/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/20">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f6f1de] text-3xl shadow-md shadow-black/20 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
         {icon}
       </div>
 
-      <h3 className="mt-5 text-lg font-bold text-[#243522]">
+      <h3 className="mt-5 text-lg font-bold text-white">
         {title}
       </h3>
 
-      <p className="mt-2 text-sm leading-6 text-[#5c6558]">
+      <p className="mt-2 text-sm leading-6 text-white/70">
         {text}
       </p>
+    </div>
+  );
+}
+
+
+/* ============================================================
+   CATEGORY SKELETON
+============================================================ */
+
+function CategorySkeleton() {
+  return (
+    <div className="flex flex-col overflow-hidden rounded-[2rem] bg-white shadow-sm">
+      <div className="aspect-square w-full animate-pulse bg-[#eeeade]" />
+
+      <div className="space-y-2 p-4">
+        <div className="h-4 w-2/3 animate-pulse rounded bg-[#e5e2d7]" />
+        <div className="h-3 w-full animate-pulse rounded bg-[#e5e2d7]" />
+        <div className="h-3 w-16 animate-pulse rounded bg-[#e5e2d7]" />
+      </div>
     </div>
   );
 }
