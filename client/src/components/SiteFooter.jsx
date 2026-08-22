@@ -3,21 +3,18 @@ import { Link } from 'react-router-dom';
 
 export function SiteFooter() {
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | subscribing | subscribed
 
   function handleSubscribe(event) {
     event.preventDefault();
 
-    if (!email.trim()) return;
+    if (!email.trim() || status !== 'idle') return;
 
-    alert("Thanks for subscribing! We'll keep you updated. 🌿");
-
-    setEmail('');
-    setSubscribed(true);
+    setStatus('subscribing');
 
     setTimeout(() => {
-      setSubscribed(false);
-    }, 10000);
+      setStatus('subscribed');
+    }, 5000);
   }
 
   return (
@@ -72,32 +69,44 @@ export function SiteFooter() {
           </div>
 
           <form onSubmit={handleSubscribe} className="mt-4 flex gap-2">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={subscribed}
-              className="w-full rounded-full border border-brand-200/30 bg-brand-800 px-4 py-2 text-xs text-white outline-none placeholder:text-brand-100/50 disabled:opacity-50"
-              placeholder="Your email"
-            />
+
+            {status !== 'subscribed' && (
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={status === 'subscribing'}
+                className="w-full rounded-full border border-brand-200/30 bg-brand-800 px-4 py-2 text-xs text-white outline-none placeholder:text-brand-100/50 disabled:opacity-50"
+                placeholder="Your email"
+              />
+            )}
 
             <button
               type="submit"
-              disabled={subscribed}
-              className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold text-white transition-all duration-300 active:scale-95 ${
-                subscribing 
-                  ? 'cursor-not-allowed bg-green-700'
-                  : 'bg-[#b9862f] hover:bg-[#a2762c]'
+              disabled={status !== 'idle'}
+              className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold text-white transition-all duration-300 active:scale-95 disabled:cursor-not-allowed ${
+                status === 'subscribed'
+                  ? 'w-full bg-green-700'
+                  : status === 'subscribing'
+                    ? 'bg-[#b9862f]/70'
+                    : 'bg-[#b9862f] hover:bg-[#a2762c]'
               }`}
             >
-              {subscribed ? (
-                <span className="flex items-center gap-1.5">
+              {status === 'subscribing' ? (
+                <span className="flex items-center justify-center gap-1.5">
                   <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Subscribing...
+                </span>
+              ) : status === 'subscribed' ? (
+                <span className="flex items-center justify-center gap-1.5">
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none">
+                    <path d="m4 10 4 4 8-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                   Subscribed
                 </span>
               ) : (
-                'Subscribed'
+                'Subscribe'
               )}
             </button>
           </form>
